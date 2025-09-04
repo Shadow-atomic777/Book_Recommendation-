@@ -1,2 +1,2 @@
 # Book_Recommendation-
- Project for recommending books
+ Project for recommending books.
