@@ -1,0 +1,18 @@
+#ignore environment 
+.venv/
+venv/
+
+#ignore editor configs
+.vscode/
+
+#ignore cache/junk
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+
+#ignore data
+data/
