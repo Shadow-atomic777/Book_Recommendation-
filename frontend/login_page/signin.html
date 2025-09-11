@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Sign Up</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:#f0f2f5;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      margin:0;
+    }
+    .auth-card {
+      background:#fff;
+      width:360px;
+      border-radius:10px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.08);
+      padding:24px 28px;
+    }
+    h2 { text-align:center; margin:0 0 16px; }
+    .field { margin:10px 0; position: relative; }
+    .field label { display:block; margin-bottom:6px; font-size:14px; color:#333; }
+    .field input {
+      width:100%; padding:10px 12px; border:1px solid #ccc; border-radius:6px; font-size:14px;
+    }
+    .toggle-password {
+      position:absolute;
+      right:10px;
+      top:36px;
+      cursor:pointer;
+      font-size:14px;
+      color:#555;
+      background:none;
+      border:none;
+    }
+    .btn {
+      width:100%; padding:12px; margin-top:12px;
+      background:#4CAF50; color:#fff; border:none; border-radius:6px; font-size:16px; cursor:pointer;
+    }
+    .btn:hover { background:#45a049; }
+    .or {
+      display:flex; align-items:center; margin:16px 0;
+      color:#666; font-size:12px;
+    }
+    .or::before, .or::after {
+      content:""; height:1px; background:#ddd; flex:1;
+    }
+    .or span { margin:0 10px; }
+    .secondary {
+      text-align:center; margin-top:12px; font-size:14px;
+    }
+    .google-fallback {
+      display:flex; align-items:center; justify-content:center;
+      gap:8px; width:100%; padding:10px 12px; border-radius:6px;
+      border:1px solid #ccc; background:#fff; cursor:pointer; font-weight:500;
+    }
+    .google-fallback img { width:18px; height:18px; }
+  </style>
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
+    function decodeJWT(token) {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64).split("").map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)).join("")
+      );
+      return JSON.parse(jsonPayload);
+    }
+
+    function handleCredentialResponse(response) {
+      const payload = decodeJWT(response.credential);
+      alert("Google sign-in successful for: " + payload.email);
+    }
+
+    window.onload = function () {
+      if (window.google && GOOGLE_CLIENT_ID !== "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com") {
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleCredentialResponse,
+          auto_select: false
+        });
+        google.accounts.id.renderButton(
+          document.getElementById("googleSignInDiv"),
+          { type: "standard", shape: "rectangular", theme: "outline", text: "signup_with", size: "large", width: 320 }
+        );
+      }
+    };
+
+    function onSignupSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+
+      if (password !== confirm) {
+        alert("Passwords do not match.");
+        return;
+      }
+      const strong = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}/;
+      if (!strong.test(password)) {
+        alert("Password must be 8+ characters and include upper, lower, and a number.");
+        return;
+      }
+      alert("Sign up form submitted for: " + email);
+    }
+
+    // Toggle show/hide password
+    function togglePassword(id, btn) {
+      const field = document.getElementById(id);
+      if (field.type === "password") {
+        field.type = "text";
+        btn.textContent = "Hide";
+      } else {
+        field.type = "password";
+        btn.textContent = "Show";
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="auth-card">
+    <h2>Create Account to get free access to all books</h2>
+    <form onsubmit="onSignupSubmit(event)">
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="Enter email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="Enter password" required
+          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
+        <button type="button" class="toggle-password" onclick="togglePassword('password', this)">Show</button>
+      </div>
+      <div class="field">
+        <label for="confirm">Confirm Password</label>
+        <input id="confirm" name="confirm" type="password" placeholder="Repeat password" required />
+        <button type="button" class="toggle-password" onclick="togglePassword('confirm', this)">Show</button>
+      </div>
+      <button class="btn" type="submit">Sign Up</button>
+    </form>
+
+    <div class="or"><span>OR</span></div>
+    <div id="googleSignInDiv"></div>
+    <div style="margin-top:10px;">
+      <button class="google-fallback" type="button" onclick="alert('Google Sign-In not initialized. Add your client ID.')">
+        <img alt="Google" src="https://www.gstatic.com/images/branding/product/1x/gsa_64dp.png" />
+        Continue with Google
+      </button>
+    </div>
+    <div class="secondary">
+      Already have an account? <a href="login.html">Log in</a>
+    </div>
+  </div>
+</body>
+</html>

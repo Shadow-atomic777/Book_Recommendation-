@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .auth-card {
+      background: #fff;
+      width: 360px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      padding: 24px 28px;
+    }
+    h2 { text-align: center; margin: 0 0 16px; }
+    .field { margin: 10px 0; position: relative; }
+    .field label { display: block; margin-bottom: 6px; font-size: 14px; color: #333; }
+    .field input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 36px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #555;
+      background: none;
+      border: none;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      background: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn:hover { background: #45a049; }
+    .secondary {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+  </style>
+
+  <script>
+    // Toggle password visibility
+    function togglePassword(id, btn) {
+      const field = document.getElementById(id);
+      if (field.type === "password") {
+        field.type = "text";
+        btn.textContent = "Hide";
+      } else {
+        field.type = "password";
+        btn.textContent = "Show";
+      }
+    }
+
+    // Handle submit (demo only)
+    function onLoginSubmit(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      alert("Login attempted for: " + username);
+    }
+  </script>
+</head>
+<body>
+  <div class="auth-card">
+    <h2>Login</h2>
+    <form onsubmit="onLoginSubmit(event)">
+      <div class="field">
+        <label for="username">Username or Email</label>
+        <input id="username" name="username" type="text" placeholder="Enter username or email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="Enter password" required />
+        <button type="button" class="toggle-password" onclick="togglePassword('password', this)">Show</button>
+      </div>
+      <button class="btn" type="submit">Login</button>
+    </form>
+
+    <div class="secondary">
+      Don’t have an account? <a href="signin.html">Sign up</a>
+    </div>
+  </div>
+</body>
+</html>
